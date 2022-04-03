@@ -15,6 +15,7 @@ import BlogLayout from 'src/layouts/BlogLayout/BlogLayout'
 const Routes = () => {
   return (
     <Router>
+      <Route path="/calc" page={CalcPage} name="calc" />
       <Set wrap={Post2sLayout}>
         <Route path="/post2s/new" page={Post2NewPost2Page} name="newPost2" />
         <Route path="/post2s/{id:Int}/edit" page={Post2EditPost2Page} name="editPost2" />
