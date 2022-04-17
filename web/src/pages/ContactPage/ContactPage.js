@@ -1,14 +1,30 @@
 import { Link, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
+import { MetaTags, useMutation } from '@redwoodjs/web'
+import { toast, Toaster } from '@redwoodjs/web/toast'
 import { FieldError, Form, Label, TextField, Submit } from '@redwoodjs/forms'
 
+const CREATE_CONTACT = gql`
+  mutation CreateContactMutation($input: CreateContactInput!) {
+    createContact(input: $input) {
+      id
+    }
+  }
+`
+
 const ContactPage = () => {
+  const [create, { loading, error }] = useMutation(CREATE_CONTACT, {
+    onCompleted: () => {
+      toast.success('Thank you for your submission!')
+    },
+  })
   const onSubmit = (data) => {
-    console.log(data)
+    console.dir(data)
+    create({ variables: { input: data } })
   }
   return (
     <>
       <MetaTags title="Contact" description="Contact page" />
+      <Toaster />
 
       <h1>ContactPage</h1>
       <Form onSubmit={onSubmit} config={{ mode: 'onBlur' }}>
@@ -40,14 +56,14 @@ const ContactPage = () => {
           Message
         </Label>
         <TextField
-          name="messege"
+          name="message"
           validation={{
             required: true,
           }}
           errorClassName="error"
         />
-        <FieldError name="messege" className="error" />
-        <Submit>Save</Submit>
+        <FieldError name="message" className="error" />
+        <Submit disabled={loading}>Save</Submit>
       </Form>
     </>
   )
